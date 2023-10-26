@@ -1,0 +1,10 @@
+COMPONENTS:
+    LCD Display
+    Servo
+    LED
+    Joystick?
+    PIR?
+
+    Joystick and PIR components would post to the server.
+    LCD, servo, and LED compnents would be controlled by the server.
+
