@@ -7,9 +7,24 @@
         <link rel="stylesheet" href='/static/style.css' />
     </head>
 <body>
-<h1>This website is BONKERS LIKE CONKER</h1>
-
-<p><a href="/led">Click here for total control! (actual amount of control may vary...)</a></p>
-
+<div id="main">
+    <section class="component one">
+        <h1>This website is BONKERS LIKE CONKER</h1>
+        <p><a href="/led">Click here for total control! (actual amount of control may vary...)</a></p>
+    </section>
+    <section class="component two">
+        <p>led control: 
+            <form action="/toggle/" method="post">
+                <button name="toggle" type="submit">switch</button>
+            </form>
+        </p>
+    </section>    
+    <section class="component three">
+        <p>This is a component section</p>
+    </section>    
+    <section class="component four">
+        <p>This is a component section</p>
+    </section>
+</div>
 </body>
 </html>

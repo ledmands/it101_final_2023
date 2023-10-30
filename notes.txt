@@ -4,7 +4,11 @@ COMPONENTS:
     LED
     Joystick?
     PIR?
+    Seven segment display?
+    Four digit display?
 
     Joystick and PIR components would post to the server.
     LCD, servo, and LED compnents would be controlled by the server.
 
+Helpful links
+https://stackoverflow.com/questions/42601478/flask-calling-python-function-on-button-onclick-event

@@ -1,3 +1,44 @@
-body {
+body 
+{
     background-color: grey;
+}
+
+#main
+{
+    padding: 10px;
+    width: 100vw;
+    height: 100vw;
+}
+
+.component 
+{
+    height: 30vw;
+    width: 30vw;
+    margin: 10px;
+    padding: 5px;
+    float: left;
+}
+
+.one
+{
+    /* position: fixed;
+    top: 0;
+    width: 1000px;  */
+    
+    background-color: pink;
+}
+
+.two
+{
+    background-color: red;
+}
+
+.three
+{
+    background-color: yellow;
+}
+
+.four
+{
+    background-color: orange;
 }

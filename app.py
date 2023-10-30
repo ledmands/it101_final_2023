@@ -8,8 +8,14 @@ from gpiozero import LED
 led = LED(17)
 app = Flask(__name__)
 
+
 @app.route('/')                           # determines entry point (/ is root)
-def index():                              # name of route
+def index():                              # name of route    
+    return render_template('index.html')
+
+@app.route('/toggle/', methods=['POST'])
+def toggle():
+    led.toggle()
     return render_template('index.html')
 
 if __name__ == '__main__':                 # this block runs the web server and the app
