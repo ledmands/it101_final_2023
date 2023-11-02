@@ -15,5 +15,11 @@ https://stackoverflow.com/questions/42601478/flask-calling-python-function-on-bu
 https://stackoverflow.com/questions/70852450/how-to-display-python-variables-on-a-web-page-and-an-lcd
 https://stackoverflow.com/questions/64559768/flask-socketio-import-wont-work-error-no-module-named-flask-socketio
 
-
-
+Motion Sensor Help
+https://stackoverflow.com/questions/2075337/uncaught-referenceerror-is-not-defined
+https://stackoverflow.com/questions/71041593/flask-socketio-emit-message-from-backend-to-frontend
+https://flask-socketio.readthedocs.io/en/latest/getting_started.html#broadcasting
+https://medium.com/the-research-nest/how-to-log-data-in-real-time-on-a-web-page-using-flask-socketio-in-python-fb55f9dad100
+https://www.educative.io/answers/what-are-locks-in-python
+https://gpiozero.readthedocs.io/en/stable/api_input.html#gpiozero.MotionSensor
+https://www.programiz.com/python-programming/time
