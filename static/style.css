@@ -7,12 +7,12 @@ body
 {
     padding: 10px;
     width: 100vw;
-    height: 100vw;
+    height: 100vh;
 }
 
 .component 
 {
-    height: 30vw;
+    height: 30vh;
     width: 30vw;
     margin: 10px;
     padding: 5px;
@@ -20,11 +20,7 @@ body
 }
 
 .one
-{
-    /* position: fixed;
-    top: 0;
-    width: 1000px;  */
-    
+{    
     background-color: pink;
 }
 
@@ -41,4 +37,11 @@ body
 .four
 {
     background-color: orange;
+}
+
+.pir
+{
+    background-color: pink;
+    height: 30vh;
+    width: 30vw;
 }

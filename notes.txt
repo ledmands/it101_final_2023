@@ -12,3 +12,8 @@ COMPONENTS:
 
 Helpful links
 https://stackoverflow.com/questions/42601478/flask-calling-python-function-on-button-onclick-event
+https://stackoverflow.com/questions/70852450/how-to-display-python-variables-on-a-web-page-and-an-lcd
+https://stackoverflow.com/questions/64559768/flask-socketio-import-wont-work-error-no-module-named-flask-socketio
+
+
+
