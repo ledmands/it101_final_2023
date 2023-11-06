@@ -9,15 +9,11 @@
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function() {
                 var socket = io();
-                socket.on('connect', function() {
-                    socket.emit('my event', {data: 'I\'m connected!'});
-                });
 
-                socket.on('my_response', function(msg){
-                    $('#test').append(
-                        '<br>' + $('<div/>')
-                        .text('motion detected at: ' + msg.data)
-                        .html());
+                socket.on('log_motion', function(data){
+                    $('#pir-log').prepend('<li>motion detected on: ' 
+                        + data.date + ' at ' + data.time 
+                        + '. Event ID: ' + data.event_counter);
                 });
             });
             
@@ -28,8 +24,8 @@
 <div id="main">
     <section class="pir">
         This is the PIR Page
-        <p>{{ pir_sensor }}</p>
-        <p id="test"></p>
+        
+        <div ><ul id="pir-log"></ul></div>
 
     </section>
     

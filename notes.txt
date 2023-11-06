@@ -23,3 +23,6 @@ https://medium.com/the-research-nest/how-to-log-data-in-real-time-on-a-web-page-
 https://www.educative.io/answers/what-are-locks-in-python
 https://gpiozero.readthedocs.io/en/stable/api_input.html#gpiozero.MotionSensor
 https://www.programiz.com/python-programming/time
+
+Nov 2
+- having trouble with the werkzeug server. used eventlet, but current code did not function, motionsensor did not send information to client.

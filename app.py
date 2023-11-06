@@ -4,6 +4,7 @@ from flask import Flask, render_template, request
 from gpiozero import LED, MotionSensor
 from flask_socketio import SocketIO, send, emit
 from threading import Lock
+from datetime import datetime
 from time import time, ctime
 # from adafruit_LCD1602 import Adafruit_CharLCD # important that files are in same directory as app file
 # from PCF8574 import PCF8574_GPIO 
@@ -16,11 +17,22 @@ socketio = SocketIO(app)
 thread = None
 thread_lock = Lock()
 
+
 def background_thread():
+    motion_event_counter = 0
     while True:
-        
         pir_unit.wait_for_motion()
-        socketio.emit('my_response', {'data': ctime(time())})
+        motion_event_counter += 1
+        event_date = datetime.now().strftime("%-d %b %Y")
+        event_time = datetime.now().strftime("%X %p")
+        # socketio.emit('log_motion', {
+        #     'time': ctime(time()), 'event_counter': motion_event_counter
+        #     })        
+        socketio.emit('log_motion', {
+            'date': event_date,
+            'time': event_time, 
+            'event_counter': motion_event_counter
+            })
         pir_unit.wait_for_no_motion()
         
 @app.route('/')                           # determines entry point (/ is root)
@@ -34,23 +46,19 @@ def toggle():
 
 @app.route('/pir/', methods=['POST'])
 def pir():
-    template_data = {
-        'pir_sensor': pir_unit.is_active
+    data = {
+        'is_active': pir_unit.is_active
     }
-    return render_template('pir.html', **template_data, async_mode=socketio.async_mode)
-
-@socketio.event
-def my_event(message):
-    emit('my_response', {'data': message['data']})
+    return render_template('pir.html', **data)
     
 @socketio.event
 def connect():
     global thread
     with thread_lock:
         if thread is None:
-            thread = socketio.start_background_task(background_thread)
-    emit('my_response', {'data': 'Connected'})
+            thread = socketio.start_background_task(background_thread)            
+#     socketio.emit('log_motion', "connection") # good for debugging or showing initial connection
 
 if __name__ == '__main__':                 # this block runs the web server and the app    
     # app.run(debug=True, host='0.0.0.0')    # 0.0.0.0 host means web app is accessible to any device on network
-    socketio.run(app, allow_unsafe_werkzeug=True)
+    socketio.run(app, allow_unsafe_werkzeug=True, debug=True, host='0.0.0.0')
