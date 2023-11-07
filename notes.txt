@@ -10,6 +10,22 @@ COMPONENTS:
     Joystick and PIR components would post to the server.
     LCD, servo, and LED compnents would be controlled by the server.
 
+    - Utilize the four digit display to show pressure levels from an api call?
+    - Use the four digit display to register DOM events? Like clicks or button presses?
+        How would this be useful?
+    - Read data entered into the DOM into the LCD screen or 7 segment display
+    - Use a photo resistor to trigger dark mode?
+        QUESTION: Should I use the ADC value or the resistance value to trigger dark mode?
+    - Use the client to control a servo. Servo should send information back to the client.
+        Button to start and stop, increase and decrease speed.
+    - Send ultrasonic distance information to the client? What purpose would this serve?
+    - Display hygrothermograph information on the DOM. Use the temperature or humidity
+        to trigger a DOM event?
+    - Could I use the joystick to trigger  a DOM event? Maybe to change colors?
+    - Sports APIs? Sportspage Feeds API 
+        rapidapi.com/blog/best-sports-apis-ranked
+        
+
 Helpful links
 https://stackoverflow.com/questions/42601478/flask-calling-python-function-on-button-onclick-event
 https://stackoverflow.com/questions/70852450/how-to-display-python-variables-on-a-web-page-and-an-lcd

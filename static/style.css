@@ -10,6 +10,11 @@ body
     height: 100vh;
 }
 
+.dark-mode {
+    background-color: black;
+    color: white;
+  }
+
 .component 
 {
     height: 30vh;

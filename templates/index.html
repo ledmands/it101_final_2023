@@ -5,6 +5,24 @@
 <html>
     <head>
         <link rel="stylesheet" href='/static/style.css' />
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+                var socket = io();
+                socket.on('set_darkmode', function(){
+                    //var element = document.body;
+                    //element.classList.toggle("dark-mode");
+                    $("body").addClass("dark-mode");
+                });
+                socket.on('set_lightmode', function(){
+                    //var element = document.body;
+                    //element.classList.toggle("dark-mode");
+                    $("body").removeClass("dark-mode");
+                });
+            });
+            
+            </script>
     </head>
 <body>
 <div id="main">
@@ -28,6 +46,7 @@
     </section>    
     <section class="component four">
         <p>This is a component section</p>
+        <button onclick="myFunction()">Toggle dark mode</button>
     </section>
 </div>
 </body>
