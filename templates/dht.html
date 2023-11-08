@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<html>
+    <head>
+        <link rel="stylesheet" href='/static/style.css' />
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+                var socket = io();
+
+                socket.on('log_temp_hum', function(data){
+                    $('#dht-log').replaceWith('<li>humidity: ' + data.humidity
+                        + '</br>temperature: ' + data.temperature
+                        + '</br>count' + data.count);
+                    //$('#dht-log').prepend('clicked');
+                    //alert('clicked');
+                    });
+
+                socket.on('dht_not_ok', function(data){
+                    $('#dht-log').prepend('<li>ERROR: ' + data)
+                });
+
+                $('#update_temp_hum').click(function() {
+                    socket.emit('update_dht_clicked');
+                    console.log("clicked");
+                })
+            });
+            
+        </script>
+    </head>
+
+<body>
+<div id="main">
+    <section class="dht">
+        This is the DHT Page
+        <p>
+            
+                <button id="update_temp_hum" type="submit">update temp hum</button>
+     
+        </p>
+        <form action="/dht/" method="post">
+            <button name="update_dht_page" type="submit">update dht</button>
+        </form>
+
+        <div>
+            {{humidity}}
+        </br>
+            {{temperature}}
+        </div>
+        
+        <div ><ul id="dht-log"></ul></div>
+
+    </section>
+    
+    
+</div>
+
+
+
+</body>
+</html>
+
