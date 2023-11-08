@@ -42,3 +42,7 @@ https://www.programiz.com/python-programming/time
 
 Nov 2
 - having trouble with the werkzeug server. used eventlet, but current code did not function, motionsensor did not send information to client.
+
+Hygrothermograph Notes
+    - Maybe use a javascript get method to update the page?
+
