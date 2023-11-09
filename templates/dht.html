@@ -11,16 +11,13 @@
                 var socket = io();
 
                 socket.on('log_temp_hum', function(data){
-                    $('#dht-log').replaceWith('<li>humidity: ' + data.humidity
-                        + '</br>temperature: ' + data.temperature
-                        + '</br>count' + data.count);
+                    $('#dht-temp').text('temperature: ' + data.temperature + '\u00B0F');
+                    $('#dht-hum').text('humidity: ' + data.humidity + '%');
+                    $('#dht-time').text('time: ' + data.time);
+                    
                     //$('#dht-log').prepend('clicked');
                     //alert('clicked');
                     });
-
-                socket.on('dht_not_ok', function(data){
-                    $('#dht-log').prepend('<li>ERROR: ' + data)
-                });
 
                 $('#update_temp_hum').click(function() {
                     socket.emit('update_dht_clicked');
@@ -36,21 +33,14 @@
     <section class="dht">
         This is the DHT Page
         <p>
-            
-                <button id="update_temp_hum" type="submit">update temp hum</button>
-     
+            <button id="update_temp_hum" type="submit">get current temp hum</button>
         </p>
-        <form action="/dht/" method="post">
-            <button name="update_dht_page" type="submit">update dht</button>
-        </form>
 
-        <div>
-            {{humidity}}
-        </br>
-            {{temperature}}
+        <div id="dht-log">
+            <p id="dht-temp"></p>
+            <p id="dht-hum"></p>
+            <p id="dht-time"></p>
         </div>
-        
-        <div ><ul id="dht-log"></ul></div>
 
     </section>
     

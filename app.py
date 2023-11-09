@@ -22,7 +22,6 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 pir_thread = None
 ldr_thread = None
-# dht_thread = None
 thread_lock = Lock()
 
 def adc_setup():
@@ -66,25 +65,6 @@ def pir_background_thread():
             })
         pir_unit.wait_for_no_motion()
 
-# def dht_background_thread():
-#     dht = DHT.DHT(26) # using physical number, no gpioZero available
-#     count = 1
-#     while True:
-#         for i in range(0,15):            
-#             chk = dht.readDHT11()     #read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
-#             if (chk is not dht.DHTLIB_OK):      #read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
-#                 # print("DHT11,OK!")
-#                 socketio.emit('dht_not_ok', 'error with DHT') # trigger an event message in the DOM
-#                 break
-#             sleep(0.1)
-#         socketio.emit('log_temp_hum', {
-#             'temperature': dht.temperature,
-#             'humidity': dht.humidity,
-#             'count': count
-#         })
-#         count += 1
-#         # sleep(2)
-
                 
         
 @app.route('/')                           # determines entry point (/ is root)
@@ -103,44 +83,37 @@ def pir():
     }
     return render_template('pir.html', **data)
 
-@app.route('/dht/', methods=['POST'])
+@app.route('/dht/', methods=['POST', 'GET'])
 def dht():
-    dht = DHT.DHT(26) # using physical number, no gpioZero available
+    return render_template('dht.html')
+   
+
+@socketio.event
+def update_dht_clicked():
+    dht = DHT.DHT(26) 
     for i in range(0,15):            
         chk = dht.readDHT11()     #read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
         if (chk is dht.DHTLIB_OK):      #read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
             print("DHT11,OK!")
             break
     sleep(0.1)
-
     data = {
-            'temperature': dht.temperature,
-            'humidity': dht.humidity
-        }
-    return render_template('dht.html', **data)
-
-# @socketio.event
-# def update_dht_clicked():
-#     dht = DHT.DHT(26) # using GPIO.BCM in Freenove_DHT.py
-#     socketio.emit('log_temp_hum', {
-#             'temperature': dht.temperature,
-#             'humidity': dht.humidity
-#         })
-    #socketio.emit('log_temp_hum')
+        'temperature': dht.temperature *  1.8 + 32,
+        'humidity': dht.humidity,
+        'time': ctime(time())
+    }
+    socketio.emit('log_temp_hum', data)
 
     
 @socketio.event
 def connect():
     global pir_thread
     global ldr_thread
-    # global dht_thread
     with thread_lock:
         if pir_thread is None:
             pir_thread = socketio.start_background_task(pir_background_thread)  
         if ldr_thread is None:
             ldr_thread = socketio.start_background_task(ldr_background_thread) 
-        # if dht_thread is None:
-        #     dht_thread = socketio.start_background_task(dht_background_thread) 
              
 
 #     socketio.emit('log_motion', "connection") # good for debugging or showing initial connection
