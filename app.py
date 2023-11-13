@@ -1,7 +1,9 @@
 # DRIVER FILE FOR THE WEB SERVER
+import os
 
 from flask import Flask, render_template, request
-from gpiozero import LED, MotionSensor
+from gpiozero import LED, MotionSensor, AngularServo
+
 import RPi.GPIO as GPIO
 from flask_socketio import SocketIO, send, emit
 from threading import Lock
@@ -13,10 +15,29 @@ import Freenove_DHT as DHT
 # from adafruit_LCD1602 import Adafruit_CharLCD # important that files are in same directory as app file
 # from PCF8574 import PCF8574_GPIO 
 async_mode = None
+os.system("sudo pigpiod")
+
 
 led = LED(17)
 pir_unit = MotionSensor(4)
 adc = ADCDevice() # Define an ADCDevice class object
+# servo_pin = 18
+
+
+myGPIO=18
+SERVO_DELAY_SEC = 0.001 
+myCorrection=0.0
+maxPW=(2.5+myCorrection)/1000
+minPW=(0.5-myCorrection)/1000
+# servo =  AngularServo(myGPIO,initial_angle=0,min_angle=0, max_angle=180,min_pulse_width=minPW,max_pulse_width=maxPW)
+servo_on = False
+
+# GPIO.setmode(GPIO.BCM)
+# GPIO.setup(servo_pin, GPIO.OUT)
+
+# servo_pwm = GPIO.PWM(18, 50)
+# servo_pwm.start(0)
+
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -42,9 +63,9 @@ def ldr_background_thread():
         # led.value = value / 255.0 # Mapping to PWM duty cycle
         voltage = value / 255.0 * 3.3
         if value > 100:
-            socketio.emit('set_darkmode')
+            socketio.emit('set_darkmode', 'dark mode')
         else:
-            socketio.emit('set_lightmode')
+            socketio.emit('set_lightmode', 'light mode')
         # print ('ADC Value : %d, Voltage : %.2f'%(value,voltage))
         sleep(0.1)
 
@@ -87,6 +108,35 @@ def pir():
 def dht():
     return render_template('dht.html')
    
+@app.route('/servo/', methods=['POST'])
+def servo_page():
+
+    return render_template('servo.html')
+
+# @app.route('/servo/test', methods=['POST'])
+# def servo_test():
+#     slider1 = request.form["slider1"]
+#     servo_pwm.ChangeDutyCycle(float(slider1))
+#     sleep(1)
+#     servo_pwm.ChangeDutyCycle(0)
+#     return render_template('servo.html')
+
+
+@socketio.event
+def toggle_servo(is_running):
+    # global servo
+    # global servo_on
+    socketio.emit('check_is_running', is_running)
+    while True:
+        for angle in range(0, 181, 1):   # make servo rotate from 0 to 180 deg
+            servo.angle = angle
+            sleep(SERVO_DELAY_SEC)
+        sleep(0.5)
+        for angle in range(180, -1, -1): # make servo rotate from 180 to 0 deg
+            servo.angle = angle
+            sleep(SERVO_DELAY_SEC)
+        sleep(0.5)
+    
 
 @socketio.event
 def update_dht_clicked():
@@ -115,9 +165,7 @@ def connect():
         if ldr_thread is None:
             ldr_thread = socketio.start_background_task(ldr_background_thread) 
              
-
-#     socketio.emit('log_motion', "connection") # good for debugging or showing initial connection
-
+             
 if __name__ == '__main__':                 # this block runs the web server and the app    
     # app.run(debug=True, host='0.0.0.0')    # 0.0.0.0 host means web app is accessible to any device on network
     adc_setup()

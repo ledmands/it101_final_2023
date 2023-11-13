@@ -9,30 +9,27 @@
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function() {
                 var socket = io();
+                //let is_running = false;
 
                 socket.on('set_darkmode', function(mode_text){
-
                     $("body").addClass("dark-mode");
-                    $("#color-mode").text(mode_text)
+                    $("#color-mode").text(mode_text);
 
                 });
                 socket.on('set_lightmode', function(mode_text){
-
                     $("body").removeClass("dark-mode");
-                    $("#color-mode").text(mode_text)
+                    $("#color-mode").text(mode_text);
                 });
-                socket.on('log_temp_hum', function(data){
-                    $('#dht-temp').text('temperature: ' + data.temperature + '\u00B0F');
-                    $('#dht-hum').text('humidity: ' + data.humidity + '%');
-                    $('#dht-time').text('time: ' + data.time);
                     
-                    //$('#dht-log').prepend('clicked');
-                    //alert('clicked');
-                    });
+                $('#start-servo').click(function() {
+                    socket.emit('toggle_servo', 1);                    
+                });            
+                $('#stop-servo').click(function() {
+                    socket.emit('toggle_servo', 0);
+                });
 
-                $('#update_temp_hum').click(function() {
-                    socket.emit('update_dht_clicked');
-                    console.log("clicked");
+                socket.on('check_is_running', function(is_running) {
+                    $(".servo").append(is_running);
                 });
             });
             
@@ -43,17 +40,23 @@
 <div id="main">
     <section id="color-mode"></section>
 
-    <section class="dht">
-        This is the DHT Page
-        <p>
-            <button id="update_temp_hum" type="submit">get current temp hum</button>
-        </p>
-
-        <div id="dht-log">
-            <p id="dht-temp"></p>
-            <p id="dht-hum"></p>
-            <p id="dht-time"></p>
+    <section class="servo">
+        This is the Servo Page
+        <div>
+            <button id="start-servo" type="submit">start servo</button>
         </div>
+        <div>
+            <button id="stop-servo" type="submit">stop servo</button>
+        </div>
+        <div>
+            <p>Testing slider control of servo</p>
+            <form method="POST" action="test">
+                <p>Slider 1 <input type="range" min="1" max="12.5" name="slider1" /> </p>
+                <input type="submit" value="submit" />
+            </form>
+        </div>
+
+        
 
     </section>
     

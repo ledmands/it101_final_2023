@@ -10,15 +10,16 @@
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function() {
                 var socket = io();
-                socket.on('set_darkmode', function(){
-                    //var element = document.body;
-                    //element.classList.toggle("dark-mode");
+                socket.on('set_darkmode', function(mode_text){
+
                     $("body").addClass("dark-mode");
+                    $("#color-mode").text(mode_text)
+
                 });
-                socket.on('set_lightmode', function(){
-                    //var element = document.body;
-                    //element.classList.toggle("dark-mode");
+                socket.on('set_lightmode', function(mode_text){
+
                     $("body").removeClass("dark-mode");
+                    $("#color-mode").text(mode_text)
                 });
             });
             
@@ -26,6 +27,7 @@
     </head>
 <body>
 <div id="main">
+    <section id="color-mode"></section>
     <section class="component one">
         <h1>This website is BONKERS LIKE CONKER</h1>
         <p><a href="/led">Click here for total control! (actual amount of control may vary...)</a></p>
@@ -50,7 +52,14 @@
                 <button name="dht_page" type="submit">dht</button>
             </form>
         </p>
-</section>
+    </section>
+    <section class="component five">
+        <p>link to servo
+            <form action="/servo/" method="post">
+                <button name="servo_page" type="submit">servo</button>
+            </form>
+        </p>
+    </section>
 </div>
 </body>
 </html>

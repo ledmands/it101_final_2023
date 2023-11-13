@@ -10,6 +10,18 @@
             $(document).ready(function() {
                 var socket = io();
 
+                socket.on('set_darkmode', function(mode_text){
+
+                    $("body").addClass("dark-mode");
+                    $("#color-mode").text(mode_text)
+
+                });
+                socket.on('set_lightmode', function(mode_text){
+
+                    $("body").removeClass("dark-mode");
+                    $("#color-mode").text(mode_text)
+                });
+
                 socket.on('log_motion', function(data){
                     $('#pir-log').prepend('<li>motion detected on: ' 
                         + data.date + ' at ' + data.time 
@@ -22,6 +34,8 @@
 
 <body>
 <div id="main">
+    <section id="color-mode"></section>
+
     <section class="pir">
         This is the PIR Page
         <div ><ul id="pir-log"></ul></div>
