@@ -11,21 +11,20 @@
                 var socket = io();
 
                 socket.on('set_darkmode', function(mode_text){
-
                     $("body").addClass("dark-mode");
-                    $("#color-mode").text(mode_text)
+                    $("#color-mode").text(mode_text);
 
                 });
                 socket.on('set_lightmode', function(mode_text){
-
                     $("body").removeClass("dark-mode");
-                    $("#color-mode").text(mode_text)
+                    $("#color-mode").text(mode_text);
                 });
-
-                socket.on('log_motion', function(data){
-                    $('#pir-log').prepend('<li>motion detected on: ' 
-                        + data.date + ' at ' + data.time 
-                        + '. Event ID: ' + data.event_counter);
+                    
+                socket.on('display_gyro_data', function(data) {
+                    $('#pitch_display').text(data.pitch);
+                    $('#roll_display').text(data.roll);
+                    $('#yaw_display').text(data.yaw);
+                    //console.log(data.pitch)
                 });
             });
             
@@ -36,11 +35,15 @@
 <div id="main">
     <section id="color-mode"></section>
 
-    <section class="pir">
-        This is the PIR Page
-        <div >
-            <ul id="pir-log"></ul>
+    <section class="mpu">
+        This is the MPU Page
+        <div id="mpu_display">
+            <p>Pitch: <span id="pitch_display"></span> &#176; / sec</p>            
+            <p>Roll: <span id="roll_display"></span> &#176; / sec</p>            
+            <p>Yaw: <span id="yaw_display"></span> &#176; / sec</p>            
         </div>
+
+        
 
     </section>
     

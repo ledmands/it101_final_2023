@@ -10,6 +10,7 @@ from datetime import datetime
 from time import time, ctime, sleep
 from ADCDevice import *
 import Freenove_DHT as DHT
+import MPU6050
 
 # from adafruit_LCD1602 import Adafruit_CharLCD # important that files are in same directory as app file
 # from PCF8574 import PCF8574_GPIO 
@@ -19,6 +20,9 @@ async_mode = None
 led = LED(17)
 pir_unit = MotionSensor(4)
 adc = ADCDevice() # Define an ADCDevice class object
+mpu = MPU6050.MPU6050()     # instantiate a MPU6050 class object
+accel = [0]*3               # define an arry to store accelerometer data
+gyro = [0]*3                # define an arry to store gyroscope data
 
 
 
@@ -26,6 +30,7 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 pir_thread = None
 ldr_thread = None
+mpu_thread = None
 thread_lock = Lock()
 
 def adc_setup():
@@ -39,6 +44,9 @@ def adc_setup():
         "Please use command 'i2cdetect -y 1' to check the I2C address! \n"
         "Program Exit. \n");
         exit(-1)
+
+def mpu_setup():
+    mpu.dmp_initialize()    # initialize MPU6050
 
 def ldr_background_thread():
     while True:
@@ -65,6 +73,30 @@ def pir_background_thread():
             })
         pir_unit.wait_for_no_motion()
                 
+def mpu_background_thread():
+    GYRO_CONVERSION_FACTOR = 131.0
+    PRECISION = 1
+    while(True):
+        # accel = mpu.get_acceleration()      # get accelerometer data
+        gyro = mpu.get_rotation()           # get gyroscope data
+        # print("gyro[0] pitch: %d \t gyro[1] roll: %d \t gyro[2] yaw: %d" %(gyro[0], gyro[1], gyro[2]))
+        # print("gyro[0] pitch: %d \t gyro[1] roll: %d \t gyro[2] yaw: %d" %(gyro[0]/131.0, gyro[1]/131.0, gyro[2]/131.0))
+        # print("a/g:%d\t%d\t%d\t%d\t%d\t%d "%(accel[0],accel[1],accel[2],gyro[0],gyro[1],gyro[2]))
+        # print("a/g:%.2f g\t%.2f g\t%.2f g\t%.2f d/s\t%.2f d/s\t%.2f d/s"%(accel[0]/16384.0,accel[1]/16384.0,
+        #     accel[2]/16384.0,gyro[0]/131.0,gyro[1]/131.0,gyro[2]/131.0))
+        pitch = round(gyro[0] / GYRO_CONVERSION_FACTOR, PRECISION)
+        roll = round(gyro[1] / GYRO_CONVERSION_FACTOR, PRECISION)
+        yaw = round(gyro[2] / GYRO_CONVERSION_FACTOR, PRECISION)        
+        # pitch = gyro[0] / GYRO_CONVERSION_FACTOR
+        # roll = gyro[1] / GYRO_CONVERSION_FACTOR
+        # yaw = gyro[2] / GYRO_CONVERSION_FACTOR
+        socketio.emit('display_gyro_data', {
+            'pitch': pitch,
+            'roll': roll,
+            'yaw': yaw
+        })
+        # socketio.emit('display_gyro_data', 'test')
+        sleep(0.1)
         
 @app.route('/')                           # determines entry point (/ is root)
 def index():                              # name of route    
@@ -85,6 +117,10 @@ def pir():
 @app.route('/dht/', methods=['POST', 'GET'])
 def dht():
     return render_template('dht.html')
+
+@app.route('/mpu/', methods=['POST'])
+def mpu_page():
+    return render_template('mpu.html')
    
 
 
@@ -109,16 +145,20 @@ def update_dht_clicked():
 def connect():
     global pir_thread
     global ldr_thread
+    global mpu_thread
     with thread_lock:
         if pir_thread is None:
             pir_thread = socketio.start_background_task(pir_background_thread)  
         if ldr_thread is None:
             ldr_thread = socketio.start_background_task(ldr_background_thread) 
+        if mpu_thread is None:
+            mpu_thread = socketio.start_background_task(mpu_background_thread) 
              
              
 if __name__ == '__main__':                 # this block runs the web server and the app    
     # app.run(debug=True, host='0.0.0.0')    # 0.0.0.0 host means web app is accessible to any device on network
     adc_setup()
+    mpu_setup()
     socketio.run(app, allow_unsafe_werkzeug=True, debug=True, host='0.0.0.0')
 
 
