@@ -12,7 +12,7 @@ from ADCDevice import *
 import Freenove_DHT as DHT
 import MPU6050
 
-# from adafruit_LCD1602 import Adafruit_CharLCD # important that files are in same directory as app file
+from adafruit_LCD1602 import Adafruit_CharLCD # important that files are in same directory as app file
 # from PCF8574 import PCF8574_GPIO 
 async_mode = None
 
