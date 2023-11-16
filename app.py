@@ -13,7 +13,7 @@ import Freenove_DHT as DHT
 import MPU6050
 
 from adafruit_LCD1602 import Adafruit_CharLCD # important that files are in same directory as app file
-# from PCF8574 import PCF8574_GPIO 
+from PCF8574 import PCF8574_GPIO 
 async_mode = None
 
 
@@ -24,7 +24,19 @@ mpu = MPU6050.MPU6050()     # instantiate a MPU6050 class object
 accel = [0]*3               # define an arry to store accelerometer data
 gyro = [0]*3                # define an arry to store gyroscope data
 
-
+PCF8574_address = 0x27  # I2C address of the PCF8574 chip.
+PCF8574A_address = 0x3F  # I2C address of the PCF8574A chip.
+# Create PCF8574 GPIO adapter.
+try:
+    mcp = PCF8574_GPIO(PCF8574_address)
+except:
+    try:
+        mcp = PCF8574_GPIO(PCF8574A_address)
+    except:
+        print ('I2C Address Error !')
+        exit(1)
+# Create LCD, passing in MCP GPIO adapter.
+lcd = Adafruit_CharLCD(pin_rs=0, pin_e=2, pins_db=[4,5,6,7], GPIO=mcp)
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -101,6 +113,10 @@ def mpu_background_thread():
 @app.route('/')                           # determines entry point (/ is root)
 def index():                              # name of route    
     return render_template('index.html')
+
+@app.route('/lcd/', methods=['POST'])
+def lcd_page():
+    render_template('lcd.html')
 
 @app.route('/toggle/', methods=['POST'])
 def toggle():
