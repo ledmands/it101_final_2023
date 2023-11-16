@@ -37,6 +37,8 @@ except:
         exit(1)
 # Create LCD, passing in MCP GPIO adapter.
 lcd = Adafruit_CharLCD(pin_rs=0, pin_e=2, pins_db=[4,5,6,7], GPIO=mcp)
+mcp.output(3,1)     # turn on LCD backlight
+lcd.begin(16,2)     # set number of LCD lines and columns
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -156,6 +158,10 @@ def update_dht_clicked():
     }
     socketio.emit('log_temp_hum', data)
 
+@socketio.event
+def update_lcd(text):
+    lcd.clear()
+    lcd.message(text)
     
 @socketio.event
 def connect():
