@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<html>
+    <head>
+        <link rel="stylesheet" href='/static/style.css' />
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+                var socket = io();
+                socket.on('set_darkmode', function(mode_text){
+
+                    $("body").addClass("dark-mode");
+                    $("#color-mode").text(mode_text)
+
+                });
+                socket.on('set_lightmode', function(mode_text){
+
+                    $("body").removeClass("dark-mode");
+                    $("#color-mode").text(mode_text)
+                });
+
+                $("#update-lcd-button").click(function() {
+                    let text = $("#lcd-text").val();
+                    socket.emit('update_lcd', text);
+                    $("#lcd-text").val("");
+                })
+
+            });
+            
+            </script>
+    </head>
+<body>
+<div id="main">
+    <section id="color-mode"></section>
+    <div>
+        <label for="message">Message:</label><br>
+        <input type="text" id="lcd-text" name="lcd-text"><br><br>
+        <button id="update-lcd-button" type="submit" value="Submit">
+    </div>
+</div>
+</body>
+</html>
