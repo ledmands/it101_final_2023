@@ -29,6 +29,16 @@
                     socket.emit('update_lcd', text)
                     $("#lcd-message").val("");
                 });
+
+                $("#show-bbc-news").click(function() {
+                    $.get(
+                        "https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=287b8dfe04834dbd99cba4dd736699d5",
+                        function(data) {
+                            console.log(data);
+                        }
+                    );
+
+                })
               
             });
             
@@ -41,13 +51,30 @@
 
     <section class="lcd">
         This is the LCD Page
-        <p>
+        <div>
             
             <label for="message">Message:</label><br>
             <input type="text" id="lcd-message" name="lcd-message"><br><br>
             <button id="send-message" type="submit" value="Submit">update lcd</button>
                       
-        </p>
+        </div>
+
+        <div>
+            <label>BBC News</label><br>
+            <button id="show-bbc-news" type="submit">BBC News</button>
+        </div>        
+        <div>
+            <label>IGN</label><br>
+            <button id="show-ign" type="submit">IGN</button>
+        </div>        
+        <div>
+            <label>CNN</label><br>
+            <button id="show-cnn" type="submit">CNN</button>
+        </div>
+
+        <div>
+            <label>BBC Headlines</label>
+        </div>
 
     </section>
     

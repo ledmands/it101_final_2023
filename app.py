@@ -1,6 +1,7 @@
 # DRIVER FILE FOR THE WEB SERVER
 
 from flask import Flask, render_template, request
+from newsapi import NewsApiClient
 from gpiozero import LED, MotionSensor, AngularServo
 
 import RPi.GPIO as GPIO
@@ -16,6 +17,8 @@ from PCF8574 import PCF8574_GPIO
 
 async_mode = None
 
+newsapi = NewsApiClient(api_key='287b8dfe04834dbd99cba4dd736699d5')
+bbc_top_headlines = newsapi.get_top_headlines(sources='bbc-news')
 
 # led = LED(17)
 # pir_unit = MotionSensor(23)
@@ -122,12 +125,13 @@ socketio = SocketIO(app)
 
         
 @app.route('/')                           # determines entry point (/ is root)
-def index():                              # name of route    
+def index():     
     return render_template('index.html')
 
 @app.route('/lcd/', methods=['POST'])
 def lcd_page():
-    return render_template('lcd.html')
+    headlines = bbc_top_headlines
+    return render_template('lcd.html', **headlines)
 
 @app.route('/toggle/', methods=['POST'])
 def toggle():

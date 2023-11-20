@@ -24,6 +24,11 @@ COMPONENTS:
     - Could I use the joystick to trigger  a DOM event? Maybe to change colors?
     - Sports APIs? Sportspage Feeds API 
         rapidapi.com/blog/best-sports-apis-ranked
+
+    - NewsAPI.org
+        - KEY: 287b8dfe04834dbd99cba4dd736699d5
+        https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=API_KEY
+
         
 
 Helpful links
