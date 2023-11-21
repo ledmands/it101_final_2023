@@ -2,6 +2,7 @@
 
 from flask import Flask, render_template, request
 from newsapi import NewsApiClient
+import json
 from gpiozero import LED, MotionSensor, AngularServo
 
 import RPi.GPIO as GPIO
@@ -18,7 +19,6 @@ from PCF8574 import PCF8574_GPIO
 async_mode = None
 
 newsapi = NewsApiClient(api_key='287b8dfe04834dbd99cba4dd736699d5')
-bbc_top_headlines = newsapi.get_top_headlines(sources='bbc-news')
 
 # led = LED(17)
 # pir_unit = MotionSensor(23)
@@ -130,8 +130,24 @@ def index():
 
 @app.route('/lcd/', methods=['POST'])
 def lcd_page():
-    headlines = bbc_top_headlines
-    return render_template('lcd.html', **headlines)
+    
+    return render_template('lcd.html')
+
+@app.route('/lcd/bbc', methods=['GET'])
+def bbc_headlines():
+    bbc_top_headlines = newsapi.get_top_headlines(sources='bbc-news')
+    first_headline = bbc_top_headlines["articles"][0]["title"]
+    
+    lcd.clear()
+    lcd.message(first_headline)
+    # if len(first_headline) > 16:
+    #     for i in range(len(first_headline)):
+    #         sleep(0.5)
+    #         lcd.DisplayLeft()
+    #     lcd.clear()
+    #     lcd.message(first_headline)
+
+    return render_template('lcd.html', first_headline=first_headline)
 
 @app.route('/toggle/', methods=['POST'])
 def toggle():
